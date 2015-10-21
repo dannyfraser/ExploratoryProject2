@@ -11,11 +11,13 @@ library(ggplot2)
 
 d <- NEI %>%
     filter(fips == "24510" & between(year, 1999, 2008)) %>%
-    select(year, type, Emissions) %>%
-    group_by(type, year) %>%
+    inner_join(y = SCC, by = "SCC") %>%
+    filter(Data.Category == "Onroad") %>%
+    select(year, Emissions) %>%
+    group_by(year) %>%
     summarise(Emissions = sum(Emissions))
 
-png("plots/plot3.png")
-qplot(data = d, x = year, y = Emissions, facets = . ~ type, geom = "line")
+png("plots/plot5.png")
+qplot(data = d, x = year, y = Emissions, geom = "line")
 dev.off()
-# all show decreases except POINT, which shows a slight increase overall
+# shows overall decrease
